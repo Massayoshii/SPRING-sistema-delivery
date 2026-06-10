@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -25,4 +26,6 @@ public class Pedido {
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itemPedidos;
 }

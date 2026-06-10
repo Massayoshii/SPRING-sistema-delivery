@@ -1,11 +1,10 @@
 package com.example.restaurante.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -23,6 +22,9 @@ public class Cliente {
     private String telefone;
 
     private String endereco;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> pedidos;
 
 
 }
