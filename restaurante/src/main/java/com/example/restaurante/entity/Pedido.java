@@ -28,4 +28,8 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itemPedidos;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 }
