@@ -1,5 +1,7 @@
 package com.example.restaurante.controller;
 
+import com.example.restaurante.dto.ClienteRequest;
+import com.example.restaurante.dto.ClienteResponse;
 import com.example.restaurante.entity.Cliente;
 import com.example.restaurante.service.ClienteService;
 import lombok.AllArgsConstructor;
@@ -15,21 +17,21 @@ public class ClienteController {
     private final ClienteService clienteService;
 
     @PostMapping
-    public Cliente criar(@RequestBody Cliente cliente ){
-        return clienteService.criar(cliente);
+    public ClienteResponse criar(@RequestBody ClienteRequest request){
+        return clienteService.criar(request);
     }
     @GetMapping
-    public List<Cliente> buscar(){
+    public List<ClienteResponse> buscar(){
         return clienteService.listar();
     }
     @GetMapping("/{id}")
-    public Cliente buscarPorId(@PathVariable Long id){
+    public ClienteResponse buscarPorId(@PathVariable Long id){
         return clienteService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public Cliente atualizar(@PathVariable Long id , @RequestBody Cliente cliente){
-        return clienteService.atualizar(id , cliente);
+    public ClienteResponse atualizar(@PathVariable Long id , @RequestBody ClienteRequest request){
+        return clienteService.atualizar(id , request);
     }
 
     @DeleteMapping("/{id}")

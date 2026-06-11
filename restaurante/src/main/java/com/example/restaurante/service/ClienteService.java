@@ -1,5 +1,7 @@
 package com.example.restaurante.service;
 
+import com.example.restaurante.dto.ClienteRequest;
+import com.example.restaurante.dto.ClienteResponse;
 import com.example.restaurante.entity.Cliente;
 import com.example.restaurante.exceptions.ClienteNaoEncontradoException;
 import com.example.restaurante.repository.ClienteRepository;
@@ -14,33 +16,54 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    public Cliente criar(Cliente cliente){
-        return clienteRepository.save(cliente);
+    public ClienteResponse criar(ClienteRequest request){
+        Cliente cliente = new Cliente();
+
+        cliente.setNome(request.nome());
+        cliente.setEmail(request.email());
+        cliente.setTelefone(request.telefone());
+        cliente.setEndereco(request.endereco());
+
+        Cliente salvo = clienteRepository.save(cliente);
+        return converterParaEntidade(salvo);
     }
 
-    public List<Cliente> listar(){
-        return clienteRepository.findAll();
+    public List<ClienteResponse> listar(){
+        return clienteRepository.findAll()
+                .stream()
+                .map(this::converterParaEntidade)
+                .toList();
     }
 
-    public Cliente buscarPorId(Long id){
-        return clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
+    public ClienteResponse buscarPorId(Long id){
+        Cliente cliente =  clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
+        return converterParaEntidade(cliente);
     }
 
-    public Cliente atualizar(Long id , Cliente clienteNovo){
-        Cliente cliente = buscarPorId(id);
+    public ClienteResponse atualizar(Long id , ClienteRequest request){
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
-        cliente.setNome(clienteNovo.getNome());
-        cliente.setEndereco(clienteNovo.getEndereco());
-        cliente.setTelefone(clienteNovo.getTelefone());
-        cliente.setEmail(clienteNovo.getEmail());
+        cliente.setNome(request.nome());
+        cliente.setEmail(request.email());
+        cliente.setTelefone(request.telefone());
+        cliente.setEndereco(request.endereco());
 
-        return clienteRepository.save(cliente);
+        Cliente salvo = clienteRepository.save(cliente);
+        return converterParaEntidade(salvo);
     }
 
     public void remover(Long id){
-        Cliente cliente = buscarPorId(id);
-
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ClienteNaoEncontradoException(id));
         clienteRepository.delete(cliente);
+    }
+
+    private ClienteResponse converterParaEntidade(Cliente cliente) {
+        return new ClienteResponse(
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                cliente.getEndereco()
+        );
     }
 }
 
