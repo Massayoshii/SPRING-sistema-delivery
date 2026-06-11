@@ -1,6 +1,7 @@
 package com.example.restaurante.entity;
 
 
+import com.example.restaurante.entity.enums.StatusPedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,9 @@ public class Pedido {
 
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
+
+    @Enumerated(EnumType.STRING)
+    private StatusPedido statusPedido = StatusPedido.PREPARANDO;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itemPedidos;
