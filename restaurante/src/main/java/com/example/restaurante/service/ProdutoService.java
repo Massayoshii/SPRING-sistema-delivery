@@ -1,6 +1,7 @@
 package com.example.restaurante.service;
 
 import com.example.restaurante.entity.Produto;
+import com.example.restaurante.exceptions.ProdutoNaoEncontradoException;
 import com.example.restaurante.repository.ProdutoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class ProdutoService {
     }
 
     public Produto buscarPorId(Long id){
-        return produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto com o id " + id +" nao encontrado"));
+        return produtoRepository.findById(id).orElseThrow(() -> new ProdutoNaoEncontradoException(id));
     }
 
     public Produto atualizar(Long id , Produto produtoNovo){
