@@ -1,5 +1,7 @@
 package com.example.restaurante.service;
 
+import com.example.restaurante.dto.RestauranteRequest;
+import com.example.restaurante.dto.RestauranteResponse;
 import com.example.restaurante.entity.Restaurante;
 import com.example.restaurante.exceptions.RestauranteNaoEncontradoException;
 import com.example.restaurante.repository.RestauranteRepository;
@@ -14,31 +16,55 @@ public class RestauranteService {
 
     private final RestauranteRepository restauranteRepository;
 
-    public Restaurante criar(Restaurante restaurante ) {
-        return restauranteRepository.save(restaurante);
+    public RestauranteResponse criar(RestauranteRequest request ) {
+        Restaurante restaurante = new Restaurante();
+
+        restaurante.setNome(request.nome());
+        restaurante.setEndereco(request.endereco());
+        restaurante.setTelefone(request.telefone());
+
+        Restaurante salvo = restauranteRepository.save(restaurante);
+
+        return converterParaResponse(salvo);
     }
 
-    public List<Restaurante> listar(){
-        return restauranteRepository.findAll();
+    public List<RestauranteResponse> listar(){
+        return restauranteRepository.findAll()
+                .stream()
+                .map(this::converterParaResponse)
+                .toList();
     }
 
-    public Restaurante buscarPorId(Long id){
-        return  restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradoException(id));
+    public RestauranteResponse buscarPorId(Long id){
+        Restaurante restaurante = restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradoException(id));
+        return converterParaResponse(restaurante);
     }
 
-    public Restaurante atualizar(Long id , Restaurante restauranteNovo){
-        Restaurante restaurante = buscarPorId(id);
+    public RestauranteResponse atualizar(Long id , RestauranteRequest request){
+        Restaurante restaurante = restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradoException(id));
 
-        restaurante.setNome(restauranteNovo.getNome());
-        restaurante.setEndereco(restauranteNovo.getEndereco());
-        restaurante.setTelefone(restauranteNovo.getTelefone());
+        restaurante.setNome(request.nome());
+        restaurante.setEndereco(request.endereco());
+        restaurante.setTelefone(request.telefone());
 
-        return restauranteRepository.save(restaurante);
+       Restaurante atualizado = restauranteRepository.save(restaurante);
+
+       return converterParaResponse(atualizado);
     }
 
     public void remover(Long id){
-        Restaurante restaurante = buscarPorId(id);
+        Restaurante restaurante = restauranteRepository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradoException(id));
         restauranteRepository.delete(restaurante);
+    }
+
+    private RestauranteResponse converterParaResponse(Restaurante restaurante){
+
+        return new RestauranteResponse(
+                restaurante.getId(),
+                restaurante.getNome(),
+                restaurante.getEndereco(),
+                restaurante.getTelefone()
+        );
     }
 
 
