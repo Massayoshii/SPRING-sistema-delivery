@@ -1,5 +1,7 @@
 package com.example.restaurante.controller;
 
+import com.example.restaurante.dto.ProdutoRequest;
+import com.example.restaurante.dto.ProdutoResponse;
 import com.example.restaurante.entity.Produto;
 import com.example.restaurante.service.ProdutoService;
 import lombok.AllArgsConstructor;
@@ -15,23 +17,23 @@ public class ProdutoController {
     private final ProdutoService produtoService;
 
     @PostMapping
-    public Produto criar(@RequestBody Produto produto){
-        return produtoService.criar(produto);
+    public ProdutoResponse criar(@RequestBody ProdutoRequest request){
+        return produtoService.criar(request);
     }
 
     @GetMapping
-    public List<Produto> listar(){
+    public List<ProdutoResponse> listar(){
         return produtoService.listar();
     }
 
     @GetMapping("/{id}")
-    public Produto buscarPorId(@PathVariable Long id){
+    public ProdutoResponse buscarPorId(@PathVariable Long id){
         return produtoService.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public Produto atualizar(@PathVariable Long id , @RequestBody Produto produto){
-        return produtoService.atualizar(id , produto);
+    public ProdutoResponse atualizar(@PathVariable Long id , @RequestBody ProdutoRequest request){
+        return produtoService.atualizar(id , request);
     }
 
     @DeleteMapping("/{id}")
