@@ -22,13 +22,11 @@ public class Pedido {
     @Column(name = "data_pedido")
     private LocalDateTime dataPedido;
 
-    private String status;
-
     @Column(name = "valor_total")
     private BigDecimal valorTotal;
 
     @Enumerated(EnumType.STRING)
-    private StatusPedido statusPedido = StatusPedido.PREPARANDO;
+    private StatusPedido status = StatusPedido.PREPARANDO;
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itemPedidos;
